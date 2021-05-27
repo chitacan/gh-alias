@@ -16,3 +16,32 @@ gh alias set --shell prs \
         --preview-window hidden \
         --border none \
         --with-nth 1..3,5,6..'
+
+gh alias set --shell stars \
+    'gh api graphql \
+        --cache 5m \
+        -f query="query {
+          viewer {
+            starredRepositories(after: \"$1\", orderBy: {field: STARRED_AT, direction: DESC}) {
+              totalCount
+              pageInfo {
+                endCursor
+              }
+              nodes {
+                nameWithOwner
+                stargazerCount
+                description
+              }
+            }
+          }
+        }" \
+        --jq ".data.viewer.starredRepositories | .pageInfo.endCursor as \$cursor | (\"total: \" + (.totalCount | tostring)), (.nodes | .[] | [.nameWithOwner, .stargazerCount, \$cursor, .description] | @tsv)" \
+    | column -t -s "$(printf "\t")" \
+    | fzf --header "C-v: preview repo" \
+        --bind "ctrl-v:toggle-preview" \
+        --bind "ctrl-y:execute(echo {3} | pbcopy)+abort" \
+        --preview "CLICOLOR_FORCE=1 gh repo view {1}" \
+        --preview-window hidden \
+        --header-lines=1 \
+        --with-nth 1,2,4.. \
+        --border none'

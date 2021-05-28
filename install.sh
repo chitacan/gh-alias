@@ -37,7 +37,7 @@ gh alias set --shell stars \
         }" \
         --jq ".data.viewer.starredRepositories | .pageInfo.endCursor as \$cursor | (\"total: \" + (.totalCount | tostring)), (.nodes | .[] | [.nameWithOwner, .stargazerCount, \$cursor, .description] | @tsv)" \
     | column -t -s "$(printf "\t")" \
-    | fzf --header "C-v: preview repo" \
+    | fzf --header "C-v: preview repo, C-y: copy endCursor to clipboard" \
         --bind "ctrl-v:toggle-preview" \
         --bind "ctrl-y:execute(echo {3} | pbcopy)+abort" \
         --preview "CLICOLOR_FORCE=1 gh repo view {1}" \

@@ -1,4 +1,6 @@
 #!/bin/sh
+
+# query current repos pull-requests
 gh alias set --shell prs \
     'gh pr list \
         --json title,state,headRefName,number,author,mergeCommit \
@@ -17,6 +19,7 @@ gh alias set --shell prs \
         --border none \
         --with-nth 1..3,5,6..'
 
+# query my starred repos
 gh alias set --shell stars \
     'gh api graphql \
         --cache 5m \
@@ -45,3 +48,6 @@ gh alias set --shell stars \
         --header-lines=1 \
         --with-nth 1,2,4.. \
         --border none'
+
+# query corp-momenti's members
+gh alias set mem 'api orgs/corp-momenti/members --jq ".[].login"'

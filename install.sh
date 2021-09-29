@@ -50,5 +50,5 @@ gh alias set --shell stars \
         --with-nth 1,2,4.. \
         --border none'
 
-# query corp-momenti's members
-gh alias set mem 'api orgs/corp-momenti/members --jq ".[].login"'
+# query orgs's members
+gh alias set mem 'api orgs/{owner}/members --jq ".[].login"'
